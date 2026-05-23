@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Master - Learn Words Effectively</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="extras.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1>Vocabulary Master</h1>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn active" data-page="home">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Flashcards</span>
+                    </button>
+                    <button class="nav-btn" data-page="dictionary">
+                        <i class="fas fa-book"></i>
+                        <span>Dictionary</span>
+                    </button>
+                    <button class="nav-btn" data-page="test">
+                        <i class="fas fa-tasks"></i>
+                        <span>Tests</span>
+                    </button>
+                    <button class="nav-btn" data-page="progress">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Progress</span>
+                    </button>
+                    <button class="nav-btn" data-page="personal">
+                        <i class="fas fa-heart"></i>
+                        <span>My Words</span>
+                    </button>
+                </nav>
+                <div class="header-controls">
+                    <div class="theme-switcher">
+                        <button id="themeToggle" class="theme-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                    <div class="user-stats">
+                        <span class="streak" id="streakCount">
+                            <i class="fas fa-fire"></i>
+                            <span id="streak">0</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Home Page - Flashcards -->
+        <section id="home" class="page active">
+            <div class="page-header">
+                <h2>Flashcard Learning</h2>
+                <p>Flip cards to learn definitions, examples, and more</p>
+            </div>
+
+            <div class="flashcard-section">
+                <div class="filters-card">
+                    <h3>Filter Words</h3>
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Difficulty</label>
+                            <div class="custom-dropdown" id="difficultyDropdown">
+                                <div class="dropdown-selected">
+                                    <span>All Difficulties</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="dropdown-options">
+                                    <div class="dropdown-option" data-value="all">All Difficulties</div>
+                                    <div class="dropdown-option" data-value="easy">Easy</div>
+                                    <div class="dropdown-option" data-value="medium">Medium</div>
+                                    <div class="dropdown-option" data-value="hard">Hard</div>
+                                </div>
+                            </div>
+                            <div class="filter-preview" id="difficultyPreview">
+                                <span class="count">0</span> <span class="label">words in selected difficulty</span>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Genre</label>
+                            <div class="custom-dropdown" id="genreDropdown">
+                                <div class="dropdown-selected">
+                                    <span>All Genres</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="dropdown-options">
+                                    <div class="dropdown-option" data-value="all">All Genres</div>
+                                    <!-- Genres will be populated dynamically -->
+                                </div>
+                            </div>
+                            <div class="filter-preview" id="genrePreview">
+                                <span class="count">0</span> <span class="label">words in selected genre</span>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="personalListOnly">
+                                <span class="checkmark"></span>
+                                My Words Only
+                            </label>
+                            <div class="filter-preview" id="personalPreview">
+                                <span class="count">0</span> <span class="label">personal words available</span>
+                            </div>
+                        </div>
+
+                        <div class="filter-info-card" id="combinedFilterInfo" style="display: none;">
+                            <h4>Filter Summary</h4>
+                            <p id="combinedFilterText">No filters applied</p>
+                        </div>
+
+                        <button id="applyFilters" class="btn-primary apply-btn-with-count">
+                            <i class="fas fa-filter"></i>
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flashcard-wrapper">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="card-content">
+                                    <div class="word-header">
+                                        <span class="difficulty-badge" id="difficultyBadge">Medium</span>
+                                        <span class="genre-tag" id="genreTag">Daily</span>
+                                    </div>
+                                    <h2 id="wordFront">Loading...</h2>
+                                    <p class="phonetic" id="phoneticFront">/ləʊdɪŋ/</p>
+                                    <div class="hint">
+                                        <i class="fas fa-sync-alt"></i>
+                                        Click to flip
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- In the flashcard back section, update to this structure: -->
+                            <div class="flashcard-back">
+                                <div class="card-content">
+                                    <div class="word-header">
+                                        <span class="difficulty-badge" id="difficultyBadgeBack">Medium</span>
+                                        <span class="genre-tag" id="genreTagBack">Daily</span>
+                                    </div>
+                                    <h2 id="wordBack">Word</h2>
+                                    <p class="phonetic" id="phoneticBack">/fəʊnetɪk/</p>
+
+                                    <div class="definition-section">
+                                        <h3>Definition</h3>
+                                        <div class="meaning" id="meaning">Loading definition...</div>
+                                    </div>
+
+                                    <div class="example-section" id="exampleSection">
+                                        <h3>Examples</h3>
+                                        <div class="example-list" id="example">
+                                            <!-- Examples will be populated here -->
+                                        </div>
+                                    </div>
+
+                                    <div class="synonyms-section" id="synonymsSection">
+                                        <h3>Synonyms</h3>
+                                        <div class="synonyms" id="synonyms">No synonyms available</div>
+                                    </div>
+
+                                    <div class="antonyms-section" id="antonymsSection">
+                                        <h3>Antonyms</h3>
+                                        <div class="antonyms" id="antonyms">No antonyms available</div>
+                                    </div>
+
+                                    <div class="word-mastery">
+                                        <h3>Mastery Level</h3>
+                                        <div class="mastery-buttons">
+                                            <button class="mastery-btn new" data-mastery="new">
+                                                <i class="far fa-circle"></i>
+                                                New
+                                            </button>
+                                            <button class="mastery-btn learning" data-mastery="learning">
+                                                <i class="fas fa-book"></i>
+                                                Learning
+                                            </button>
+                                            <button class="mastery-btn known" data-mastery="known">
+                                                <i class="fas fa-check-circle"></i>
+                                                Known
+                                            </button>
+                                            <button class="mastery-btn mastered" data-mastery="mastered">
+                                                <i class="fas fa-star"></i>
+                                                Mastered
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard-controls">
+                        <button id="prevBtn" class="btn-control">
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button id="flipBtn" class="btn-control btn-flip">
+                            <i class="fas fa-sync-alt"></i>
+                            Flip Card
+                        </button>
+                        <button id="nextBtn" class="btn-control">
+                            Next
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="secondary-controls">
+                        <button id="shuffleBtn" class="btn-secondary">
+                            <i class="fas fa-random"></i>
+                            Shuffle
+                        </button>
+                        <button id="loopBtn" class="btn-secondary">
+                            <i class="fas fa-redo"></i>
+                            Loop: Off
+                        </button>
+                        <button id="addToPersonal" class="btn-secondary btn-favorite">
+                            <i class="far fa-heart"></i>
+                            Add to My Words
+                        </button>
+                        <button id="speakWord" class="btn-secondary">
+                            <i class="fas fa-volume-up"></i>
+                            Speak
+                        </button>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span id="currentCard">0</span> of <span id="totalCards">0</span> words
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="cardProgress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dictionary Page -->
+        <section id="dictionary" class="page">
+            <div class="page-header">
+                <h2>Word Dictionary</h2>
+                <p>Browse and search through all available words</p>
+            </div>
+
+            <div class="dictionary-container">
+                <!-- Search and Controls -->
+                <div class="dictionary-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search words...">
+                        <button id="clearSearch" class="clear-search">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div class="dictionary-filters">
+                        <div class="filter-group">
+                            <!-- <label>Sort by:</label> -->
+                            <div class="custom-dropdown" id="sortDropdown">
+                                <div class="dropdown-selected">
+                                    <span>Alphabetical</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="dropdown-options">
+                                    <div class="dropdown-option" data-value="alphabetical">Alphabetical</div>
+                                    <div class="dropdown-option" data-value="difficulty">Difficulty</div>
+                                    <div class="dropdown-option" data-value="genre">Genre</div>
+                                    <div class="dropdown-option" data-value="mastery">Mastery Level</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alphabet Navigation -->
+                <div class="alphabet-nav">
+                    <div class="alphabet-list" id="alphabetList">
+                        <!-- Alphabet letters will be populated here -->
+                    </div>
+                </div>
+
+                <div id="filterInfo" class="filter-info" style="display: none;">
+                    <h4>Current Filter</h4>
+                    <p id="filterDescription">Showing words starting with A</p>
+                </div>
+
+                <!-- Word List -->
+                <div class="word-list-container">
+                    <div class="word-list-header">
+                        <h3>Word List</h3>
+                        <div class="list-stats">
+                            <span id="totalDisplayWords">0</span> words found
+                        </div>
+                    </div>
+                    <div class="word-grid" id="wordList">
+                        <!-- Words will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div id="paginationControls" class="pagination-controls">
+                    <div class="pagination-info">
+                        Showing <span id="pageStart">1</span>-<span id="pageEnd">50</span> of
+                        <span id="totalDisplayWords">0</span> words
+                        (Page <span id="currentPage">1</span> of <span id="totalPages">1</span>)
+                    </div>
+
+                    <div class="pagination-buttons">
+                        <button id="firstPage" class="pagination-btn" disabled>
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button id="prevPage" class="pagination-btn" disabled>
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+
+                        <div class="page-numbers" id="pageNumbers">
+                            <!-- Page numbers will be generated here -->
+                        </div>
+
+                        <button id="nextPage" class="pagination-btn">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button id="lastPage" class="pagination-btn">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="page-size-selector">
+                        <label for="pageSizeSelect">Words per page:</label>
+                        <select id="pageSizeSelect" class="page-size-select">
+                            <option value="20">20</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Page -->
+        <section id="test" class="page">
+            <div class="page-header">
+                <h2>Vocabulary Tests</h2>
+                <p>Test your knowledge and track your progress</p>
+            </div>
+
+            <div class="test-container">
+                <!-- Test Setup -->
+                <div class="test-setup" id="testSetup">
+                    <div class="setup-card">
+                        <h3>Test Configuration</h3>
+
+                        <div class="test-config-preview" id="testConfigPreview">
+                            <div class="config-item">
+                                <span class="config-value" id="previewTotalWords">0</span>
+                                <span class="config-label">Total Words</span>
+                            </div>
+                            <div class="config-item">
+                                <span class="config-value" id="previewAvailableWords">0</span>
+                                <span class="config-label">Available</span>
+                            </div>
+                            <div class="config-item">
+                                <span class="config-value" id="previewMaxQuestions">0</span>
+                                <span class="config-label">Max Questions</span>
+                            </div>
+                        </div>
+                        <div class="test-options">
+                            <div class="option-group">
+                                <label>Test Type</label>
+                                <div class="custom-dropdown" id="testTypeDropdown">
+                                    <div class="dropdown-selected">
+                                        <span>Meaning</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="dropdown-options">
+                                        <div class="dropdown-option" data-value="meaning">Meaning</div>
+                                        <div class="dropdown-option" data-value="synonyms">Synonyms</div>
+                                        <div class="dropdown-option" data-value="antonyms">Antonyms</div>
+                                        <div class="dropdown-option" data-value="example">Example-based</div>
+                                        <div class="dropdown-option" data-value="mixed">Mixed Questions</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <label>Difficulty</label>
+                                <div class="custom-dropdown" id="testDifficultyDropdown">
+                                    <div class="dropdown-selected">
+                                        <span>All Difficulties</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="dropdown-options">
+                                        <div class="dropdown-option" data-value="all">All Difficulties</div>
+                                        <div class="dropdown-option" data-value="easy">Easy</div>
+                                        <div class="dropdown-option" data-value="medium">Medium</div>
+                                        <div class="dropdown-option" data-value="hard">Hard</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <label>Genre</label>
+                                <div class="custom-dropdown" id="testGenreDropdown">
+                                    <div class="dropdown-selected">
+                                        <span>All Genres</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="dropdown-options">
+                                        <div class="dropdown-option" data-value="all">All Genres</div>
+                                        <div class="dropdown-option" data-value="health">Health</div>
+                                        <div class="dropdown-option" data-value="daily">Daily Life</div>
+                                        <div class="dropdown-option" data-value="household">Household</div>
+                                        <div class="dropdown-option" data-value="school">School</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <label for="questionCount">Number of Questions</label>
+                                <input type="range" id="questionCount" min="5" max="20" value="10" class="slider">
+                                <span id="questionCountValue">10</span>
+                            </div>
+
+                            <div class="option-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="testPersonalOnly">
+                                    <span class="checkmark"></span>
+                                    Test Only My Words
+                                </label>
+                            </div>
+
+                            <div class="option-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="testTroubleWords">
+                                    <span class="checkmark"></span>
+                                    Focus on Trouble Words
+                                </label>
+                            </div>
+
+                            <button id="startTest" class="btn-primary btn-large">
+                                <i class="fas fa-play"></i>
+                                Start Test
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Interface -->
+                <div class="test-interface" id="testInterface" style="display: none;">
+                    <div class="test-header">
+                        <div class="test-progress">
+                            <div class="progress-info">
+                                Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="testProgressFill"></div>
+                            </div>
+                        </div>
+                        <div class="test-timer">
+                            <i class="fas fa-clock"></i>
+                            <span id="timer">00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="question" id="question">
+                            What is the meaning of the word?
+                        </div>
+                        <div class="options-grid" id="options">
+                            <!-- Options will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="test-controls">
+                        <button id="nextQuestion" class="btn-primary" style="display: none;">
+                            Next Question
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Test Results -->
+                <div class="test-results" id="testResults" style="display: none;">
+                    <div class="results-card">
+                        <div class="results-header">
+                            <i class="fas fa-trophy"></i>
+                            <h2>Test Completed!</h2>
+                        </div>
+
+                        <div class="score-display">
+                            <div class="score-circle">
+                                <span id="scorePercent">85%</span>
+                            </div>
+                            <div class="score-details">
+                                <h3 id="scoreText">Great Job!</h3>
+                                <p>You scored <span id="scoreValue">8</span> out of <span
+                                        id="totalQuestionsValue">10</span></p>
+                            </div>
+                        </div>
+
+                        <div class="results-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="correctAnswers">8</span>
+                                <span class="stat-label">Correct</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="incorrectAnswers">2</span>
+                                <span class="stat-label">Incorrect</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="timeTaken">02:30</span>
+                                <span class="stat-label">Time</span>
+                            </div>
+                        </div>
+
+                        <div class="results-actions">
+                            <button id="retestIncorrect" class="btn-secondary">
+                                <i class="fas fa-redo"></i>
+                                Retest Incorrect
+                            </button>
+                            <button id="reviewTest" class="btn-secondary">
+                                <i class="fas fa-list"></i>
+                                Review Answers
+                            </button>
+                            <button id="newTest" class="btn-primary">
+                                <i class="fas fa-plus"></i>
+                                New Test
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Test Section -->
+                <div class="review-test" id="reviewTest" style="display: none;">
+                    <div class="review-header">
+                        <h2>Test Review</h2>
+                        <button id="closeReview" class="btn-secondary">
+                            <i class="fas fa-times"></i>
+                            Close Review
+                        </button>
+                    </div>
+                    <div class="review-questions" id="reviewQuestions">
+                        <!-- Review questions will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Page -->
+        <section id="progress" class="page">
+            <div class="page-header">
+                <h2>Learning Progress</h2>
+                <p>Track your vocabulary learning journey</p>
+            </div>
+
+            <div class="progress-container">
+                <!-- Stats Overview -->
+                <div class="stats-overview">
+                    <div class="stat-card large">
+                        <i class="fas fa-trophy"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="totalTests">0</span>
+                            <span class="stat-label">Tests Taken</span>
+                        </div>
+                    </div>
+                    <div class="stat-card large">
+                        <i class="fas fa-chart-line"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="averageScore">0%</span>
+                            <span class="stat-label">Average Score</span>
+                        </div>
+                    </div>
+                    <div class="stat-card large">
+                        <i class="fas fa-heart"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="masteredWordsProgress">0</span>
+                            <span class="stat-label">Mastered Words</span>
+                        </div>
+                    </div>
+                    <div class="stat-card large">
+                        <i class="fas fa-fire"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="currentStreak">0</span>
+                            <span class="stat-label">Day Streak</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <h3>Score Progress</h3>
+                        <div class="chart-container">
+                            <canvas id="scoreChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Word Mastery</h3>
+                        <div class="chart-container">
+                            <canvas id="masteryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test History -->
+                <div class="test-history">
+                    <h3>Recent Tests</h3>
+                    <div class="history-list" id="testHistory">
+                        <!-- Test history items will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Word Progress -->
+                <div class="word-progress-section">
+                    <div class="progress-filters">
+                        <h3>Word Mastery Levels</h3>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter="all">All Words</button>
+                            <button class="filter-tab" data-filter="new">New Words</button>
+                            <button class="filter-tab" data-filter="learning">Learning</button>
+                            <button class="filter-tab" data-filter="known">Known Words</button>
+                            <button class="filter-tab" data-filter="mastered">Mastered</button>
+                            <button class="filter-tab" data-filter="trouble">Trouble Words</button>
+                        </div>
+                    </div>
+                    <div class="word-progress-grid" id="wordProgressGrid">
+                        <!-- Word progress items will be populated here -->
+                    </div>
+                    <!-- Progress Page Pagination -->
+                    <div id="progressPagination" class="pagination-controls"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Personal Word List -->
+        <section id="personal" class="page">
+            <div class="page-header">
+                <h2>My Word List</h2>
+                <p>Manage your personal vocabulary collection</p>
+            </div>
+
+            <div class="personal-container">
+                <div class="personal-actions">
+                    <div class="action-buttons">
+                        <button id="practiceWords" class="btn-primary">
+                            <i class="fas fa-play"></i>
+                            Practice My Words
+                        </button>
+                        <button id="shufflePersonal" class="btn-secondary">
+                            <i class="fas fa-random"></i>
+                            Shuffle
+                        </button>
+                        <button id="exportWords" class="btn-secondary">
+                            <i class="fas fa-download"></i>
+                            Export Words
+                        </button>
+                        <button id="importWordsBtn" class="btn-secondary">
+                            <i class="fas fa-upload"></i>
+                            Import Words
+                        </button>
+                        <input type="file" id="importWords" accept=".json" style="display: none;">
+                    </div>
+
+                    <div class="personal-stats">
+                        <div class="stat-card small">
+                            <i class="fas fa-heart"></i>
+                            <span id="personalWordCount">0</span> words
+                        </div>
+                        <div class="stat-card small">
+                            <i class="fas fa-star"></i>
+                            <span id="personalMasteredCount">0</span> mastered
+                        </div>
+                    </div>
+                </div>
+
+                <div class="personal-content">
+                    <div class="word-list-section">
+                        <div class="section-header">
+                            <h3>My Saved Words</h3>
+                            <div class="personal-filters">
+                                <div class="custom-dropdown" id="personalFilterDropdown">
+                                    <div class="dropdown-selected">
+                                        <span>All Words</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="dropdown-options">
+                                        <div class="dropdown-option" data-value="all">All Words</div>
+                                        <div class="dropdown-option" data-value="new">New Words</div>
+                                        <div class="dropdown-option" data-value="learning">Learning</div>
+                                        <div class="dropdown-option" data-value="known">Known Words</div>
+                                        <div class="dropdown-option" data-value="mastered">Mastered</div>
+                                        <div class="dropdown-option" data-value="trouble">Trouble Words</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="word-grid" id="personalWordList">
+                            <!-- Personal words will be populated here -->
+                        </div>
+                        <!-- Personal Words Pagination -->
+                        <div id="personalWordsPagination" class="pagination-controls"></div>
+                    </div>
+
+                    <div class="practice-modes">
+                        <h3>Practice Modes</h3>
+                        <div class="mode-cards">
+                            <div class="mode-card">
+                                <i class="fas fa-layer-group"></i>
+                                <h4>Flashcards</h4>
+                                <p>Review with interactive flashcards</p>
+                                <button class="btn-secondary practice-mode-btn" data-mode="flashcards">Start</button>
+                            </div>
+                            <div class="mode-card">
+                                <i class="fas fa-tasks"></i>
+                                <h4>Quick Test</h4>
+                                <p>Test your knowledge</p>
+                                <button class="btn-secondary practice-mode-btn" data-mode="test">Start</button>
+                            </div>
+                            <div class="mode-card">
+                                <i class="fas fa-gamepad"></i>
+                                <h4>Matching Game</h4>
+                                <p>Match words with definitions</p>
+                                <button class="btn-secondary practice-mode-btn" data-mode="matching">Start</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Word Detail Modal -->
+    <div id="wordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Word Details</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Content will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Accessibility Panel -->
+    <div class="accessibility-panel">
+        <button id="accessibilityToggle" class="accessibility-btn">
+            <i class="fas fa-universal-access"></i>
+        </button>
+        <div class="accessibility-options">
+            <button id="textToSpeech" class="accessibility-option">
+                <i class="fas fa-volume-up"></i>
+                Speak
+            </button>
+            <button id="increaseFont" class="accessibility-option">
+                <i class="fas fa-text-height"></i>
+                Larger Text
+            </button>
+            <button id="decreaseFont" class="accessibility-option">
+                <i class="fas fa-text-width"></i>
+                Smaller Text
+            </button>
+            <button id="highContrast" class="accessibility-option">
+                <i class="fas fa-adjust"></i>
+                High Contrast
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <div class="loading-content">
+                <h3 class="loading-title" id="loadingTitle">Loading Vocabulary App</h3>
+                <p class="loading-message" id="loadingMessage">Initializing application...</p>
+
+                <div class="loading-progress-section">
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="progress-label">Progress</span>
+                            <span class="progress-percent" id="loadingProgressText">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="loadingProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <div class="loading-stats" id="loadingStats">
+                        <div class="stat-item">
+                            <span class="stat-label">Status:</span>
+                            <span class="stat-value" id="loadingStatus">Initializing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Progress Modal -->
+    <div id="importProgressModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Importing Words</h2>
+            </div>
+            <div class="modal-body">
+                <div class="import-progress">
+                    <div class="progress-info">
+                        <span id="importProgressText">Processing words...</span>
+                        <span id="importProgressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="importProgressFill"></div>
+                    </div>
+                    <div class="import-stats">
+                        <span>Words processed: <span id="importedWordsCount">0</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dictionary Upload Modal -->
+    <div id="dictionaryUpload" class="upload-section" style="display: none;">
+        <div class="upload-card">
+            <h2>Upload Your Dictionary</h2>
+            <p>Please upload your dictionary file to get started:</p>
+
+            <div class="upload-options">
+                <div class="upload-option">
+                    <h3>Option 1: Upload JSON File</h3>
+                    <p>Select your <code>my_offline_dictionary.json</code> file</p>
+                    <input type="file" id="jsonFileInput" accept=".json" class="file-input">
+                    <label for="jsonFileInput" class="btn-primary">
+                        <i class="fas fa-upload"></i>
+                        Upload JSON File
+                    </label>
+                </div>
+
+                <div class="upload-option">
+                    <h3>Option 2: Upload JSONL File</h3>
+                    <p>Select your <code>kaikki.org-dictionary-English.jsonl</code> file</p>
+                    <input type="file" id="jsonlFileInput" accept=".jsonl,.txt" class="file-input">
+                    <label for="jsonlFileInput" class="btn-primary">
+                        <i class="fas fa-upload"></i>
+                        Upload JSONL File
+                    </label>
+                </div>
+
+                <div class="upload-option">
+                    <h3>Option 3: Use Sample Words</h3>
+                    <p>Start with a sample vocabulary set</p>
+                    <button id="useSampleWords" class="btn-secondary">
+                        <i class="fas fa-play"></i>
+                        Use Sample Words
+                    </button>
+                </div>
+            </div>
+
+            <div class="upload-info">
+                <h4>Supported Formats:</h4>
+                <ul>
+                    <li><strong>JSON Format:</strong>
+                        <code>{"word": {"meaning": "definition", "synonyms": [], ...}}</code>
+                    </li>
+                    <li><strong>JSONL Format:</strong> One JSON object per line (kaikki.org format)</li>
+                    <li><strong>File Size:</strong> Up to 50MB supported</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Management Section -->
+    <div class="data-management">
+        <button id="reuploadDictionary" class="btn-secondary btn-small">
+            <i class="fas fa-redo"></i>
+            Re-upload Dictionary
+        </button>
+        <button id="clearAllData" class="btn-secondary btn-small">
+            <i class="fas fa-trash"></i>
+            Clear All Data
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
